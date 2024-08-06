@@ -1,0 +1,15 @@
+select  substring(i.year from '^[0-9]+') as relise_year,
+count(distinct i2.user_id)
+from items i 
+left join interactions i2 on i.id = i2.item_id 
+group by relise_year
+
+По рейтингу 
+
+select  substring(i.year from '^[0-9]+') as relise_year,
+i2.rating
+from items i 
+left join interactions i2 on i.id = i2.item_id 
+where i2.rating is not null 
+group by relise_year, i2.rating
+order by rating desc 
