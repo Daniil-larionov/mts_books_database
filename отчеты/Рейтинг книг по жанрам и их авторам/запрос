@@ -1,0 +1,16 @@
+select i.title,
+avg(i2.rating) as avg_rating,
+avg(i2.progress) avg_progress
+from items as i
+left join interactions i2 on i.id=i2.item_id 
+group by i.title 
+order by avg_progress desc, avg_rating desc
+
+Лучшие жанры по рейтингу и дочитываниям 
+select i.genres,
+avg(i2.rating) as avg_rating,
+avg(i2.progress) avg_progress
+from items as i
+left join interactions i2 on i.id=i2.item_id 
+group by i.genres 
+order by avg_progress desc, avg_rating desc 
