@@ -1,0 +1,28 @@
+Исследование зависимости между датой начала чтения и процентом завершения книги. Есть ли связь между временем года и завершением книг?
+WITH seasons AS (
+    SELECT 
+        user_id,
+        item_id,
+        progress,
+        start_date::date,
+        CASE 
+            WHEN EXTRACT(MONTH FROM start_date::date) IN (12, 1, 2) THEN 'Winter'
+            WHEN EXTRACT(MONTH FROM start_date::date) IN (3, 4, 5) THEN 'Spring'
+            WHEN EXTRACT(MONTH FROM start_date::date) IN (6, 7, 8) THEN 'Summer'
+            WHEN EXTRACT(MONTH FROM start_date::date) IN (9, 10, 11) THEN 'Autumn'
+        END AS season
+    FROM 
+        interactions as i 
+)
+SELECT
+    season,
+    COUNT(DISTINCT user_id || '-' || item_id) AS unique_sessions,
+    AVG(progress) AS average_progress,
+    SUM(CASE WHEN progress = 100 THEN 1 ELSE 0 END) AS completed_books,
+    COUNT(DISTINCT user_id || '-' || item_id) - SUM(CASE WHEN progress = 100 THEN 1 ELSE 0 END) AS incomplete_books
+FROM 
+    seasons
+GROUP BY 
+    season
+ORDER BY 
+    season;
