@@ -1,0 +1,6 @@
+Анализ временных паттернов чтения книг пользователями (например, в какое время года или в какие дни недели пользователи чаще всего читают).
+
+select i.start_date ::date as day,
+count(distinct user_id) as num_of_users 
+from interactions i 
+group by day
