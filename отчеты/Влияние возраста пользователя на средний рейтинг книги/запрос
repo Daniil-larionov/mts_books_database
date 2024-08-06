@@ -1,0 +1,15 @@
+select count(distinct u1.user_id) amt_of_users,
+CASE 
+           WHEN (substring(u1.age from '^[0-9]+')::integer BETWEEN 18 AND 24 OR substring(u1.age from '_([0-9]+)$')::integer BETWEEN 18 AND 24) THEN '18_24'
+           WHEN (substring(u1.age from '^[0-9]+')::integer BETWEEN 25 AND 34 OR substring(u1.age from '_([0-9]+)$')::integer BETWEEN 25 AND 34) THEN '25_34'
+           WHEN (substring(u1.age from '^[0-9]+')::integer BETWEEN 35 AND 44 OR substring(u1.age from '_([0-9]+)$')::integer BETWEEN 35 AND 44) THEN '35_44'
+           WHEN (substring(u1.age from '^[0-9]+')::integer BETWEEN 45 AND 54 OR substring(u1.age from '_([0-9]+)$')::integer BETWEEN 45 AND 54) THEN '45_54'
+           WHEN (substring(u1.age from '^[0-9]+')::integer BETWEEN 55 AND 64 OR substring(u1.age from '_([0-9]+)$')::integer BETWEEN 55 AND 64) THEN '55_64'
+           WHEN (substring(u1.age from '^[0-9]+')::integer >= 65 OR substring(u1.age from '_([0-9]+)$')::integer >= 65) THEN '65_inf'
+           ELSE 'Unknown'
+       END as age_range,
+avg(i.rating) as rating 
+from users u1 
+left join 
+interactions i on i.user_id = u1.user_id 
+group by age_range
