@@ -1,0 +1,15 @@
+Определение книг, которые пользователи чаще всего начинают, но не заканчивают, и анализ их характеристик (жанр, авторы, год публикации).
+Эти отчеты помогут бизнесу лучше понимать своих пользователей, их предпочтения и поведение, что позволит улучшить рекомендации, маркетинговые стратегии и общий пользовательский опыт.
+
+WITH fi AS (
+    SELECT item_id, user_id, MIN(start_date) AS first_date
+    FROM interactions i 
+    GROUP BY item_id, user_id
+)
+SELECT fi.item_id, COUNT(*) AS start_count
+FROM fi 
+JOIN interactions i ON fi.item_id = i.item_id AND fi.user_id = i.user_id
+WHERE i.start_date = fi.first_date
+  AND i.progress > 0 AND i.progress < 100
+GROUP BY fi.item_id
+ORDER BY start_count DESC;
